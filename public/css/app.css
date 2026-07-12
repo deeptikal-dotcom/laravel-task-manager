@@ -1,0 +1,208 @@
+/*
+ * youbloom Task Manager — custom styling layered on Bootstrap 4.
+ * Bootstrap 4 only; no other framework is used here.
+ */
+
+:root {
+    --yb-brand: #e6224a;      /* youbloom accent */
+    --yb-brand-dark: #b81a3b;
+    --yb-ink: #1f2733;
+    --yb-muted: #6c757d;
+    --yb-bg: #f4f6fa;
+}
+
+body {
+    background: var(--yb-bg);
+    color: var(--yb-ink);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Navbar ---------- */
+.yb-navbar {
+    background: #ffffff;
+    border-bottom: 1px solid #e9edf3;
+}
+
+.yb-navbar .navbar-brand {
+    font-weight: 700;
+    letter-spacing: -.2px;
+    color: var(--yb-ink);
+    display: inline-flex;
+    align-items: center;
+}
+
+.yb-brand-mark {
+    color: var(--yb-brand);
+}
+
+.yb-brand-you {
+    color: var(--yb-ink);
+}
+
+.yb-navbar .navbar-brand small {
+    font-weight: 500;
+    color: var(--yb-muted);
+    letter-spacing: .3px;
+}
+
+.btn-brand {
+    background: var(--yb-brand);
+    border-color: var(--yb-brand);
+    color: #fff;
+}
+
+.btn-brand:hover,
+.btn-brand:focus {
+    background: var(--yb-brand-dark);
+    border-color: var(--yb-brand-dark);
+    color: #fff;
+}
+
+.btn-outline-brand {
+    color: var(--yb-brand);
+    border-color: var(--yb-brand);
+}
+
+.btn-outline-brand:hover,
+.btn-outline-brand:focus {
+    background: var(--yb-brand);
+    border-color: var(--yb-brand);
+    color: #fff;
+}
+
+/* ---------- Layout ---------- */
+.yb-shell {
+    max-width: 960px;
+}
+
+.page-title {
+    font-weight: 700;
+    letter-spacing: -.4px;
+}
+
+.page-subtitle {
+    color: var(--yb-muted);
+    margin-bottom: 0;
+}
+
+/* ---------- Cards ---------- */
+.card {
+    border: 1px solid #e9edf3;
+    border-radius: .6rem;
+}
+
+.card-elevated {
+    box-shadow: 0 1px 2px rgba(31, 39, 51, .04), 0 4px 16px rgba(31, 39, 51, .05);
+}
+
+/* ---------- Summary stat cards ---------- */
+.stat-card {
+    border-radius: .6rem;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(31, 39, 51, .08);
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.stat-card .stat-label {
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    font-size: .72rem;
+    font-weight: 600;
+    color: var(--yb-muted);
+}
+
+.stat-card.stat-total   { border-left: 4px solid var(--yb-brand); }
+.stat-card.stat-done    { border-left: 4px solid #28a745; }
+.stat-card.stat-pending { border-left: 4px solid #f0ad4e; }
+
+/* ---------- Task cards ---------- */
+.task-card {
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    border-left: 4px solid #f0ad4e; /* pending accent */
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(31, 39, 51, .10);
+}
+
+.task-card.completed {
+    border-left-color: #28a745;
+    background: #f6fbf7;
+}
+
+.task-title {
+    font-weight: 600;
+}
+
+.task-title.completed {
+    color: #1e7e34;
+}
+
+.task-title .task-check {
+    color: #28a745;
+    margin-right: .35rem;
+    font-weight: 700;
+}
+
+.task-meta {
+    font-size: .8rem;
+    color: var(--yb-muted);
+}
+
+.task-divider {
+    border-top: 1px solid #eef1f6;
+    margin: .9rem 0;
+}
+
+.badge-pill-lg {
+    padding: .45em .8em;
+    font-size: .78rem;
+    font-weight: 600;
+}
+
+/* ---------- Empty state ---------- */
+.empty-state {
+    border: 1px dashed #d4dae3;
+    border-radius: .6rem;
+    background: #fff;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+.empty-state .empty-icon {
+    font-size: 2.75rem;
+    line-height: 1;
+    color: #c2cad6;
+    margin-bottom: .75rem;
+}
+
+/* ---------- Forms ---------- */
+.form-control {
+    border-radius: .45rem;
+}
+
+.form-control:focus {
+    border-color: var(--yb-brand);
+    box-shadow: 0 0 0 .2rem rgba(230, 34, 74, .15);
+}
+
+.form-section-label {
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+/* ---------- Footer ---------- */
+.yb-footer {
+    color: var(--yb-muted);
+    font-size: .85rem;
+}

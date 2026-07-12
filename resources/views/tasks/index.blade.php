@@ -3,17 +3,55 @@
 @section('title', 'All Tasks')
 
 @section('content')
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h1 class="h3 mb-0">Tasks</h1>
-        <a href="{{ route('tasks.create') }}" class="btn btn-primary">
+    @php
+        $totalCount     = \App\Models\Task::count();
+        $completedCount = \App\Models\Task::where('status', \App\Models\Task::STATUS_COMPLETED)->count();
+        $pendingCount   = $totalCount - $completedCount;
+    @endphp
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 page-title mb-1">Tasks</h1>
+            <p class="page-subtitle">Manage and track your work in one place.</p>
+        </div>
+        <a href="{{ route('tasks.create') }}" class="btn btn-brand">
             + Create Task
         </a>
     </div>
 
-    <form action="{{ route('tasks.index') }}" method="GET" class="card card-body mb-4 shadow-sm">
+    {{-- Summary cards --}}
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3 mb-md-0">
+            <div class="card card-elevated stat-card stat-total h-100">
+                <div class="card-body">
+                    <div class="stat-label">Total Tasks</div>
+                    <div class="stat-value">{{ $totalCount }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3 mb-md-0">
+            <div class="card card-elevated stat-card stat-done h-100">
+                <div class="card-body">
+                    <div class="stat-label">Completed</div>
+                    <div class="stat-value text-success">{{ $completedCount }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-elevated stat-card stat-pending h-100">
+                <div class="card-body">
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-value" style="color:#f0ad4e;">{{ $pendingCount }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Search / filter --}}
+    <form action="{{ route('tasks.index') }}" method="GET" class="card card-elevated card-body mb-4">
         <div class="form-row align-items-end">
-            <div class="col-md-6 form-group mb-0">
-                <label for="search" class="small text-muted">Search by title or status</label>
+            <div class="col-md-6 form-group mb-2 mb-md-0">
+                <label for="search" class="small text-muted mb-1">Search by title or status</label>
                 <input type="text"
                        id="search"
                        name="search"
@@ -21,8 +59,8 @@
                        class="form-control"
                        placeholder="e.g. deploy, pending, completed…">
             </div>
-            <div class="col-md-3 form-group mb-0">
-                <label for="status" class="small text-muted">Filter by status</label>
+            <div class="col-md-3 form-group mb-2 mb-md-0">
+                <label for="status" class="small text-muted mb-1">Filter by status</label>
                 <select id="status" name="status" class="form-control">
                     <option value="">Any</option>
                     <option value="pending"   @selected(request('status') === 'pending')>Pending</option>
@@ -30,38 +68,41 @@
                 </select>
             </div>
             <div class="col-md-3 form-group mb-0 d-flex">
-                <button type="submit" class="btn btn-secondary mr-2 flex-fill">Apply</button>
+                <button type="submit" class="btn btn-outline-brand mr-2 flex-fill">Apply</button>
                 <a href="{{ route('tasks.index') }}" class="btn btn-outline-secondary flex-fill">Reset</a>
             </div>
         </div>
     </form>
 
     @forelse ($tasks as $task)
-        <div class="card task-card shadow-sm mb-3 {{ $task->isCompleted() ? 'completed border-success' : 'border-warning' }}">
+        <div class="card card-elevated task-card mb-3 {{ $task->isCompleted() ? 'completed' : '' }}">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div class="pr-3">
                         <h5 class="mb-1 task-title {{ $task->isCompleted() ? 'completed' : '' }}">
+                            @if ($task->isCompleted())
+                                <span class="task-check" aria-hidden="true">&#10003;</span>
+                            @endif
                             {{ $task->title }}
                         </h5>
                         @if ($task->description)
                             <p class="mb-2 text-muted">{{ $task->description }}</p>
                         @endif
-                        <small class="text-muted">
+                        <span class="task-meta">
                             Created {{ $task->created_at->format('M j, Y g:i A') }}
-                        </small>
+                        </span>
                     </div>
 
                     <div class="text-right">
                         @if ($task->isCompleted())
-                            <span class="badge badge-success p-2">Completed</span>
+                            <span class="badge badge-pill badge-success badge-pill-lg">Completed</span>
                         @else
-                            <span class="badge badge-warning p-2">Pending</span>
+                            <span class="badge badge-pill badge-warning badge-pill-lg">Pending</span>
                         @endif
                     </div>
                 </div>
 
-                <hr>
+                <div class="task-divider"></div>
 
                 <div class="d-flex flex-wrap">
                     <form action="{{ route('tasks.toggle', $task) }}"
@@ -121,13 +162,25 @@
             </div>
         </div>
     @empty
-        <div class="text-center py-5">
-            <p class="lead text-muted mb-3">No tasks yet.</p>
-            <a href="{{ route('tasks.create') }}" class="btn btn-primary">Create your first task</a>
+        <div class="empty-state">
+            <div class="empty-icon">&#128203;</div>
+            <h5 class="mb-1">No tasks found</h5>
+            <p class="text-muted mb-3">
+                @if ($search || request('status'))
+                    Nothing matches your current search or filter.
+                @else
+                    You haven't created any tasks yet.
+                @endif
+            </p>
+            @if ($search || request('status'))
+                <a href="{{ route('tasks.index') }}" class="btn btn-outline-secondary">Clear filters</a>
+            @else
+                <a href="{{ route('tasks.create') }}" class="btn btn-brand">Create your first task</a>
+            @endif
         </div>
     @endforelse
 
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center mt-4">
         {{ $tasks->links() }}
     </div>
 @endsection
